@@ -3,7 +3,7 @@
  */
 package ltg.ps.phenomena.helioroom_notifier;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -11,9 +11,7 @@ import ltg.ps.phenomena.helioroom_notifier.commands.UpdatePhenomena;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -43,6 +41,7 @@ public class TestUpdatePhenomena {
 		}
 		up.parse(doc.getRootElement());
 		up.execute();
+		assertTrue(true);
 	}
 
 }

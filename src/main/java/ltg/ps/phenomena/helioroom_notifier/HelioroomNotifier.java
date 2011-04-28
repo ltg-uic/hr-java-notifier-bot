@@ -13,7 +13,9 @@ import ltg.ps.api.phenomena.PhenomenaWindow;
 import ltg.ps.phenomena.support.HelioroomNotifierPersistence;
 import ltg.ps.phenomena.support.model.Degree;
 import ltg.ps.phenomena.support.model.Helioroom;
+import ltg.ps.phenomena.support.model.HelioroomWindow;
 import ltg.ps.phenomena.support.model.Planet;
+import ltg.ps.phenomena.support.model.Window;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -141,8 +143,9 @@ public class HelioroomNotifier extends ActivePhenomena {
 		for(Planet p: observedPhenomena.getPlanets()) {
 			p.computeCurrentPosition(timeDelta);
 		}
-		printMercuryPosition();
+		//printMercuryPosition();
 		// compute how far they are from the beginning of each screen
+		
 		// write notifications somewhere
 		// notifyObservers 
 		//// Observers will fetch notifications and send them out
@@ -159,11 +162,16 @@ public class HelioroomNotifier extends ActivePhenomena {
 
 	public void setObservedPhenomena(Helioroom h) {
 		this.observedPhenomena = h;
+		//find clients windows
+		int wc=0;
+		for (Window w: observedPhenomena.getPhenWindows())
+			if(w instanceof HelioroomWindow)
+				wc++;
 		// update refresh rate of the simulation
 		int quickestPlanet = observedPhenomena.getPlanets().get(0).getClassOrbitalTime()*60;
-		int time = quickestPlanet / (observedPhenomena.getPhenWindows().size() * refreshRate);
-		if(time>0) {
-			this.setSleepTime(time);
+		int time = quickestPlanet / (wc * refreshRate);
+		if(time > 0) {
+			setSleepTime(time);
 			log.info("Planet positions will be updated every " + time + " seconds.");
 		}
 	}

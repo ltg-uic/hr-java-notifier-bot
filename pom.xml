@@ -6,16 +6,16 @@
   <name>HelioRoom notification engine</name>
   <dependencies>
   	<dependency>
-  		<groupId>ltg</groupId>
-  		<artifactId>phenomena-api</artifactId>
-  		<version>1.0</version>
-  	</dependency>
-  	<dependency>
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
   		<version>4.8.2</version>
   		<type>jar</type>
   		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>ltg</groupId>
+  		<artifactId>phenomena-api</artifactId>
+  		<version>1.0</version>
   	</dependency>
   </dependencies>
 </project>
