@@ -39,9 +39,10 @@ public class UpdatePhenomena extends PhenomenaCommand {
 	 * @see ltg.ps.api.Command#parse(org.dom4j.Element)
 	 */
 	public void parse(Element xml) {
-		h = new Helioroom(xml.getName());
-		h.configureWindows(xml.element("windows").asXML());
-		h.configure(xml.element("config").asXML());
+		Element e = (Element) xml.elements().get(0);
+		h = new Helioroom(e.getName());
+		h.configureWindows(e.element("windows").asXML());
+		h.configure(e.element("config").asXML());
 	}
 
 	
