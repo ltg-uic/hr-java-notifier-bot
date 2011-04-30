@@ -4,6 +4,8 @@
 package ltg.ps.phenomena.support.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.dom4j.Document;
@@ -104,6 +106,7 @@ public class Helioroom {
 						Integer.valueOf(el1.elementTextTrim("startPosition"))
 						));
 			}
+			sortPlanets();
 		} catch (DocumentException e) {
 			log.info("Impossible to configure helioroom");
 		}
@@ -138,4 +141,11 @@ public class Helioroom {
 	}
 
 
+	private void sortPlanets() {
+		Collections.sort(planets, new Comparator<Planet>() {
+			public int compare(Planet p1, Planet p2) {
+				return p1.getClassOrbitalTime() - p2.getClassOrbitalTime();
+			}
+		});
+	}
 }

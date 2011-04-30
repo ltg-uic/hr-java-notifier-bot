@@ -3,6 +3,9 @@
  */
 package ltg.ps.phenomena.helioroom_notifier;
 
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
 /**
  * TODO Description
  *
@@ -41,8 +44,18 @@ public class Notification {
 	
 	
 	public String toXML() {
-		// "name", ("color" planet), will enter window "window" in approximately "advance" seconds
-		return null;
+		Element root = DocumentHelper.createElement("notification");
+		root.addAttribute("type", "Helioroom");
+		root.addElement("planetName").addText(planetName);
+		root.addElement("planetColor").addText(planetColor);
+		root.addElement("enteringWindow").addText(window);
+		root.addElement("inSeconds").addText(secondsInAdvance);
+		return HelioroomNotifier.removeXMLDeclaration(DocumentHelper.createDocument(root));
+	}
+	
+	public String toString() {
+		return planetName + ", the " + planetColor + " planet, will enter window " 
+				+ window + " in approximately " + secondsInAdvance + " seconds.\n";
 	}
 		
 

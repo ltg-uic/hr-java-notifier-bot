@@ -14,7 +14,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import ltg.ps.api.phenomena.ActivePhenomena;
 import ltg.ps.api.phenomena.PhenomenaWindow;
 import ltg.ps.phenomena.support.HelioroomNotifierPersistence;
-import ltg.ps.phenomena.support.model.Degree;
 import ltg.ps.phenomena.support.model.Helioroom;
 import ltg.ps.phenomena.support.model.HelioroomWindow;
 import ltg.ps.phenomena.support.model.Planet;
@@ -145,8 +144,14 @@ public class HelioroomNotifier extends ActivePhenomena {
 		if(observedPhenomena == null || howManyPlanetsFromTheOutside == -1 || howManySecondsInAdvance == -1)
 			return;
 		long timeDelta = new Date().getTime()/1000 - observedPhenomena.getStartTime();
-		// for each planet
-		for(Planet p: observedPhenomena.getPlanets()) {
+		// for each planet from the limit-on
+		List<Planet> plans = observedPhenomena.getPlanets();
+		int pi = plans.size() - howManyPlanetsFromTheOutside;
+		if (pi < 0)
+			return;
+		Planet p = null;
+		while (pi < plans.size()) {
+			p = plans.get(pi);
 			// compute the current position of each planet (in degrees) 
 			p.computeCurrentPosition((float)timeDelta);
 			// compute the distance it will cover in the next howManySecondsInAdvance
@@ -158,23 +163,30 @@ public class HelioroomNotifier extends ActivePhenomena {
 				notifications.put(new Notification(p.getName(), p.getColorName(), 
 								p.getWindow().getWindowName(), howManySecondsInAdvance));
 			}
+			pi++;
 		}
-		printMercuryPosition();
-	}
-
-
-	public void printMercuryPosition() {
-		Degree sp = observedPhenomena.getPlanets().get(0).getStartPosition();
-		Degree cp = observedPhenomena.getPlanets().get(0).getCurrentPosition();
-		log.info("Mercury position is " + cp + " and started at " + sp);
 	}
 	
 	
-	public void printPlutoPosition() {
-		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getStartPosition();
-		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getCurrentPosition();
-		log.info("Pluto position is " + cp + " and started at " + sp);
+	public List<Notification> getNotifications() {
+		List<Notification> n = new ArrayList<Notification>();
+		notifications.drainTo(n);
+		return n;
 	}
+
+
+//	public void printFirstPlanetPosition() {
+//		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-howManyPlanetsFromTheOutside).getStartPosition();
+//		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-howManyPlanetsFromTheOutside).getCurrentPosition();
+//		log.info("Mercury position is " + cp + " and started at " + sp);
+//	}
+//	
+//	
+//	public void printLastPlanetPosition() {
+//		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getStartPosition();
+//		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getCurrentPosition();
+//		log.info("Pluto position is " + cp + " and started at " + sp);
+//	}
 	
 
 
@@ -231,7 +243,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 	
 	
 	
-	private String removeXMLDeclaration(Document doc) {
+	public static String removeXMLDeclaration(Document doc) {
 		StringWriter w = new StringWriter();
 		OutputFormat f =  OutputFormat.createPrettyPrint();
 		f.setSuppressDeclaration(true);

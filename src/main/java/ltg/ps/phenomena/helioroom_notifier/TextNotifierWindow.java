@@ -3,6 +3,8 @@
  */
 package ltg.ps.phenomena.helioroom_notifier;
 
+import java.util.List;
+
 import ltg.ps.api.phenomena.Phenomena;
 import ltg.ps.api.phenomena.PhenomenaWindow;
 
@@ -12,13 +14,14 @@ import ltg.ps.api.phenomena.PhenomenaWindow;
  * @author Gugo
  */
 public class TextNotifierWindow extends PhenomenaWindow {
+	
+	private List<Notification> notifications = null;
 
 	/**
 	 * @param windowName
 	 */
 	public TextNotifierWindow(String windowName) {
 		super(windowName);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -26,17 +29,28 @@ public class TextNotifierWindow extends PhenomenaWindow {
 	 */
 	@Override
 	public String toXML() {
-		// TODO Auto-generated method stub
-		return null;
+		if (notifications == null)
+			return "";
+		String s = "<notifications>";
+		for (Notification n : notifications) 
+			s+= n.toXML();
+		s += "</notifications>";
+		// HUMAN READABLE VERSION
+//		s = "";
+//		for (Notification n : notifications) 
+//			s+= n.toString();
+		// END HUMAN READABLE
+		return s;
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see ltg.ps.api.phenomena.PhenomenaWindow#update(ltg.ps.api.phenomena.Phenomena)
 	 */
 	@Override
-	public void update(Phenomena arg0) {
-		// TODO Auto-generated method stub
-
+	public void update(Phenomena p) {
+		notifications = ((HelioroomNotifier)p).getNotifications();
+		System.err.println(toXML());
 	}
 
 }

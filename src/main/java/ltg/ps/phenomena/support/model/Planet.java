@@ -91,4 +91,14 @@ public class Planet {
 			}
 		return false;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Planet [name=" + name + "]";
+	}
+	
+	
+	
+	
 }
