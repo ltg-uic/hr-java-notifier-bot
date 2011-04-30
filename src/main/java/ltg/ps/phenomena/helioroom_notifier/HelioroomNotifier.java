@@ -34,7 +34,6 @@ public class HelioroomNotifier extends ActivePhenomena {
 	// Phenomena data
 	private Helioroom observedPhenomena = null;
 	private List<HelioroomWindow> clientWins = null;
-	private List<Notification> notifications = null;
 	
 	// Notifier data
 	private int refreshRate = 6;
@@ -43,6 +42,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 	private int correctionFactor = 0;
 	private boolean enableText = false;
 	private boolean enableVoice = false;
+	private List<Notification> notifications = null;
 	
 	// Components
 	private HelioroomNotifierPersistence db = null;
@@ -209,9 +209,28 @@ public class HelioroomNotifier extends ActivePhenomena {
 	public void setCorrectionFactor(int cf) {
 		this.correctionFactor = cf;
 	}
-	
-	
-	
+
+
+	public void setHowManyPlanetsFromTheOutside(int howManyPlanetsFromTheOutside) {
+		this.howManyPlanetsFromTheOutside = howManyPlanetsFromTheOutside;
+	}
+
+
+	public void setHowManySecondsInAdvance(int howManySecondsInAdvance) {
+		this.howManySecondsInAdvance = howManySecondsInAdvance;
+	}
+
+
+	public void setEnableText(boolean enableText) {
+		this.enableText = enableText;
+	}
+
+
+	public void setEnableVoice(boolean enableVoice) {
+		this.enableVoice = enableVoice;
+	}
+
+
 	public String toXML() {
 		Element root = DocumentHelper.createElement(instanceName);
 		// Windows

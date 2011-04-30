@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class TestUpdateCorrectionFactor {
 	
-	String cmd = "<updateCorrectionFactor><correctionFactor>8</correctionFactor></updateCorrectionFactor>";
+	private String cmd = "<updateCorrectionFactor><correctionFactor>8</correctionFactor></updateCorrectionFactor>";
 	
 
 	@Test
