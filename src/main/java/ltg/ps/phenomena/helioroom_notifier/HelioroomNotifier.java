@@ -5,8 +5,11 @@ package ltg.ps.phenomena.helioroom_notifier;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import ltg.ps.api.phenomena.ActivePhenomena;
 import ltg.ps.api.phenomena.PhenomenaWindow;
@@ -33,14 +36,15 @@ public class HelioroomNotifier extends ActivePhenomena {
 
 	// Phenomena data
 	private Helioroom observedPhenomena = null;
+	private List<HelioroomWindow> clientWins = null;
+	private BlockingQueue<Notification> notifications = null;
 	
 	// Notifier data
-	private int refreshRate = 4;
+	private int refreshRate = 6;
 	private int howManyPlanetsFromTheOutside = -1;
 	private int howManySecondsInAdvance = -1;
 	private boolean enableText = false;
 	private boolean enableVoice = false;
-	
 	
 	// Components
 	private HelioroomNotifierPersistence db = null;
@@ -52,6 +56,8 @@ public class HelioroomNotifier extends ActivePhenomena {
 	public HelioroomNotifier(String instanceId) {
 		super(instanceId);
 		db = new HelioroomNotifierPersistence(this);
+		clientWins = new ArrayList<HelioroomWindow>();
+		notifications = new LinkedBlockingQueue<Notification>();
 	}
 
 
@@ -138,26 +144,38 @@ public class HelioroomNotifier extends ActivePhenomena {
 		// check that all parameters are initialized
 		if(observedPhenomena == null || howManyPlanetsFromTheOutside == -1 || howManySecondsInAdvance == -1)
 			return;
-		// compute the position of planets in degrees
 		long timeDelta = new Date().getTime()/1000 - observedPhenomena.getStartTime();
+		// for each planet
 		for(Planet p: observedPhenomena.getPlanets()) {
-			p.computeCurrentPosition(timeDelta);
+			// compute the current position of each planet (in degrees) 
+			p.computeCurrentPosition((float)timeDelta);
+			// compute the distance it will cover in the next howManySecondsInAdvance
+			p.computeDistanceTraveled((float)howManySecondsInAdvance);
+			// compute if and which window the planet will enter
+			// and check it is different from the last one
+			if (p.findWindow(this.clientWins)) {
+				// if so write a notification
+				notifications.put(new Notification(p.getName(), p.getColorName(), 
+								p.getWindow().getWindowName(), howManySecondsInAdvance));
+			}
 		}
-		//printMercuryPosition();
-		// compute how far they are from the beginning of each screen
-		
-		// write notifications somewhere
-		// notifyObservers 
-		//// Observers will fetch notifications and send them out
+		printMercuryPosition();
 	}
-	
-	
 
-	private void printMercuryPosition() {
+
+	public void printMercuryPosition() {
 		Degree sp = observedPhenomena.getPlanets().get(0).getStartPosition();
 		Degree cp = observedPhenomena.getPlanets().get(0).getCurrentPosition();
 		log.info("Mercury position is " + cp + " and started at " + sp);
 	}
+	
+	
+	public void printPlutoPosition() {
+		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getStartPosition();
+		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getCurrentPosition();
+		log.info("Pluto position is " + cp + " and started at " + sp);
+	}
+	
 
 
 	public void setObservedPhenomena(Helioroom h) {
@@ -165,8 +183,10 @@ public class HelioroomNotifier extends ActivePhenomena {
 		//find clients windows
 		int wc=0;
 		for (Window w: observedPhenomena.getPhenWindows())
-			if(w instanceof HelioroomWindow)
+			if(w instanceof HelioroomWindow) {
+				clientWins.add((HelioroomWindow) w);
 				wc++;
+			}
 		// update refresh rate of the simulation
 		int quickestPlanet = observedPhenomena.getPlanets().get(0).getClassOrbitalTime()*60;
 		int time = quickestPlanet / (wc * refreshRate);

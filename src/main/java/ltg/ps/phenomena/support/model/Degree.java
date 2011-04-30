@@ -42,6 +42,26 @@ public class Degree {
 	}
 	
 	
+	/** 
+	 * Returns true if the value of this degree falls inside the arc measured
+	 * counter clockwise from begin to end.
+	 *
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public boolean insideCCWArc(Degree begin, Degree end) {
+		Degree be, bc, ce = null;
+		be = begin.sub(end);
+		bc = begin.sub(this);
+		ce = this.sub(end);
+		if (bc.getValue() > 0f && bc.getValue() < be.getValue() 
+				&& ce.getValue() > 0f && ce.getValue() < be.getValue())
+			return true;
+		return false;
+	}
+	
+	
 	public float getValue() {
 		return value;
 	}
