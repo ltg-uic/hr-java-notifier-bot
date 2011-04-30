@@ -42,6 +42,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 	private int refreshRate = 6;
 	private int howManyPlanetsFromTheOutside = -1;
 	private int howManySecondsInAdvance = -1;
+	private int correctionFactor = 0;
 	private boolean enableText = false;
 	private boolean enableVoice = false;
 	
@@ -154,8 +155,10 @@ public class HelioroomNotifier extends ActivePhenomena {
 			p = plans.get(pi);
 			// compute the current position of each planet (in degrees) 
 			p.computeCurrentPosition((float)timeDelta);
-			// compute the distance it will cover in the next howManySecondsInAdvance
-			p.computeDistanceTraveled((float)howManySecondsInAdvance);
+			// apply the correction factor
+			int travelTime = howManySecondsInAdvance + correctionFactor;
+			// compute the distance it will cover in the next travelTime
+			p.computeDistanceTraveled((float) travelTime);
 			// compute if and which window the planet will enter
 			// and check it is different from the last one
 			if (p.findWindow(this.clientWins)) {
@@ -175,19 +178,14 @@ public class HelioroomNotifier extends ActivePhenomena {
 	}
 
 
-//	public void printFirstPlanetPosition() {
-//		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-howManyPlanetsFromTheOutside).getStartPosition();
-//		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-howManyPlanetsFromTheOutside).getCurrentPosition();
-//		log.info("Mercury position is " + cp + " and started at " + sp);
-//	}
-//	
-//	
-//	public void printLastPlanetPosition() {
-//		Degree sp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getStartPosition();
-//		Degree cp = observedPhenomena.getPlanets().get(observedPhenomena.getPlanets().size()-1).getCurrentPosition();
-//		log.info("Pluto position is " + cp + " and started at " + sp);
-//	}
-	
+	public boolean isEnableText() {
+		return enableText;
+	}
+
+
+	public boolean isEnableVoice() {
+		return enableVoice;
+	}
 
 
 	public void setObservedPhenomena(Helioroom h) {
@@ -206,6 +204,12 @@ public class HelioroomNotifier extends ActivePhenomena {
 			setSleepTime(time);
 			log.info("Planet positions will be updated every " + time + " seconds.");
 		}
+	}
+	
+	
+	
+	public void setCorrectionFactor(int cf) {
+		this.correctionFactor = cf;
 	}
 	
 	

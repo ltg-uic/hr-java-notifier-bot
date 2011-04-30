@@ -3,6 +3,8 @@
  */
 package ltg.ps.phenomena.helioroom_notifier;
 
+import java.util.List;
+
 import ltg.ps.api.phenomena.Phenomena;
 import ltg.ps.api.phenomena.PhenomenaWindow;
 
@@ -13,12 +15,14 @@ import ltg.ps.api.phenomena.PhenomenaWindow;
  */
 public class VoiceNotifierWindow extends PhenomenaWindow {
 
+	private List<Notification> notifications = null;
+	private boolean isActive = false;
+
 	/**
 	 * @param windowName
 	 */
 	public VoiceNotifierWindow(String windowName) {
 		super(windowName);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -26,17 +30,22 @@ public class VoiceNotifierWindow extends PhenomenaWindow {
 	 */
 	@Override
 	public String toXML() {
-		// TODO Auto-generated method stub
-		return null;
+		if (isActive || notifications == null)
+			return "";
+		String s = "<notifications>";
+		for (Notification n : notifications) 
+			s+= n.toXML();
+		s += "</notifications>";
+		return s;
 	}
 
 	/* (non-Javadoc)
 	 * @see ltg.ps.api.phenomena.PhenomenaWindow#update(ltg.ps.api.phenomena.Phenomena)
 	 */
 	@Override
-	public void update(Phenomena arg0) {
-		// TODO Auto-generated method stub
-
+	public void update(Phenomena p) {
+		notifications = ((HelioroomNotifier)p).getNotifications();
+		isActive = ((HelioroomNotifier)p).isEnableVoice();
 	}
 
 }
