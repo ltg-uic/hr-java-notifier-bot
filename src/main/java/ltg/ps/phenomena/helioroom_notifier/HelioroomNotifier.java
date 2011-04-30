@@ -8,8 +8,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import ltg.ps.api.phenomena.ActivePhenomena;
 import ltg.ps.api.phenomena.PhenomenaWindow;
@@ -36,7 +34,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 	// Phenomena data
 	private Helioroom observedPhenomena = null;
 	private List<HelioroomWindow> clientWins = null;
-	private BlockingQueue<Notification> notifications = null;
+	private List<Notification> notifications = null;
 	
 	// Notifier data
 	private int refreshRate = 6;
@@ -57,7 +55,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 		super(instanceId);
 		db = new HelioroomNotifierPersistence(this);
 		clientWins = new ArrayList<HelioroomWindow>();
-		notifications = new LinkedBlockingQueue<Notification>();
+		notifications = new ArrayList<Notification>();
 	}
 
 
@@ -141,6 +139,8 @@ public class HelioroomNotifier extends ActivePhenomena {
 	 */
 	@Override
 	protected void update() throws InterruptedException {
+		// Clear notifications
+		notifications.clear();
 		// check that all parameters are initialized
 		if(observedPhenomena == null || howManyPlanetsFromTheOutside == -1 || howManySecondsInAdvance == -1)
 			return;
@@ -163,7 +163,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 			// and check it is different from the last one
 			if (p.findWindow(this.clientWins)) {
 				// if so write a notification
-				notifications.put(new Notification(p.getName(), p.getColorName(), 
+				notifications.add(new Notification(p.getName(), p.getColorName(), 
 								p.getWindow().getWindowName(), howManySecondsInAdvance));
 			}
 			pi++;
@@ -172,9 +172,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 	
 	
 	public List<Notification> getNotifications() {
-		List<Notification> n = new ArrayList<Notification>();
-		notifications.drainTo(n);
-		return n;
+		return notifications;
 	}
 
 

@@ -31,17 +31,18 @@ public class TextNotifierWindow extends PhenomenaWindow {
 	 */
 	@Override
 	public String toXML() {
-		if (isActive || notifications == null)
+		if (!isActive || notifications == null)
 			return "";
-		String s = "<notifications>";
+		String s = "";
+		String no = "";
 		if (!isHumanReadable) {
 			// xml
 			for (Notification n : notifications) 
-				s+= n.toXML();
-			s += "</notifications>";
+				no+= n.toXML();
+			if (!"".equals(no))
+				s = "<notifications>" + no +  "</notifications>";
 		} else {
 			// human readable
-			s = "";
 			for (Notification n : notifications) 
 				s+= n.toString();
 		}

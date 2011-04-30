@@ -7,6 +7,7 @@ import java.io.File;
 
 import ltg.ps.phenomena.helioroom_notifier.HelioroomNotifier;
 import ltg.ps.phenomena.helioroom_notifier.TextNotifierWindow;
+import ltg.ps.phenomena.helioroom_notifier.VoiceNotifierWindow;
 import ltg.ps.phenomena.helioroom_notifier.commands.UpdatePhenomena;
 
 import org.dom4j.Document;
@@ -23,7 +24,8 @@ public class NotifierLoader {
 	private HelioroomNotifier hn = new HelioroomNotifier("hr_dev_notification");
 	private UpdatePhenomena up = new UpdatePhenomena(hn);
 	private File xml = new File("src/test/resources/phenUpdate.xml");
-	private TextNotifierWindow tnf = new TextNotifierWindow("test_window");
+	private TextNotifierWindow tnf = new TextNotifierWindow("text_window");
+	private VoiceNotifierWindow vnf = new VoiceNotifierWindow("voice_window");
 
 	/**
 	 * TODO Description
@@ -59,6 +61,7 @@ public class NotifierLoader {
 		// Start the thread
 		hn.start();
 		hn.addObserver(tnf);
+		hn.addObserver(vnf);
 	}
 
 }

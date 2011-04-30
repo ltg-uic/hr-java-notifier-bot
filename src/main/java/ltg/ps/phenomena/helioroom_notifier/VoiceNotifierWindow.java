@@ -30,12 +30,14 @@ public class VoiceNotifierWindow extends PhenomenaWindow {
 	 */
 	@Override
 	public String toXML() {
-		if (isActive || notifications == null)
+		if (!isActive || notifications == null)
 			return "";
-		String s = "<notifications>";
+		String s = "";
+		String no = "";
 		for (Notification n : notifications) 
-			s+= n.toXML();
-		s += "</notifications>";
+			no+= n.toXML();
+		if (!"".equals(no))
+			s = "<notifications>" + no +  "</notifications>";
 		return s;
 	}
 
