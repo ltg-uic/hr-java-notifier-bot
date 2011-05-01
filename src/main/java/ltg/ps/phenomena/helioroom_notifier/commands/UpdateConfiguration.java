@@ -33,11 +33,8 @@ public class UpdateConfiguration extends PhenomenaCommand {
 	 * @see ltg.ps.api.Command#execute()
 	 */
 	public void execute() {
-		((HelioroomNotifier) target).setHowManyPlanetsFromTheOutside(howManyPlanetsFromTheOutside);
-		((HelioroomNotifier) target).setHowManySecondsInAdvance(howManySecondsInAdvance);
-		((HelioroomNotifier) target).setCorrectionFactor(correctionFactor);
-		((HelioroomNotifier) target).setEnableText(enableText);
-		((HelioroomNotifier) target).setEnableVoice(enableVoice);
+		((HelioroomNotifier) target).updateConfiguration(howManyPlanetsFromTheOutside, 
+						howManySecondsInAdvance, correctionFactor, enableText, enableVoice);
 	}
 
 	/* (non-Javadoc)

@@ -77,6 +77,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 			// Phenomena properties
 			howManyPlanetsFromTheOutside = Integer.valueOf(el.elementTextTrim("howManyPlanetsFromTheOutside"));
 			howManySecondsInAdvance = Integer.valueOf(el.elementTextTrim("howManySecondsInAdvance"));
+			correctionFactor = Integer.valueOf(el.elementTextTrim("correctionFactor"));
 			enableText = Boolean.valueOf(el.elementTextTrim("enableText"));
 			enableVoice = Boolean.valueOf(el.elementTextTrim("enableVoice"));
 			db.save();
@@ -206,29 +207,24 @@ public class HelioroomNotifier extends ActivePhenomena {
 	
 	
 	
-	public void setCorrectionFactor(int cf) {
-		this.correctionFactor = cf;
-	}
-
-
-	public void setHowManyPlanetsFromTheOutside(int howManyPlanetsFromTheOutside) {
+	
+	public void updateConfiguration(int howManyPlanetsFromTheOutside, 
+			int howManySecondsInAdvance, int correctionFactor, boolean enableText, 
+																	boolean enableVoice) {
 		this.howManyPlanetsFromTheOutside = howManyPlanetsFromTheOutside;
-	}
-
-
-	public void setHowManySecondsInAdvance(int howManySecondsInAdvance) {
 		this.howManySecondsInAdvance = howManySecondsInAdvance;
-	}
-
-
-	public void setEnableText(boolean enableText) {
+		this.correctionFactor = correctionFactor;
 		this.enableText = enableText;
-	}
-
-
-	public void setEnableVoice(boolean enableVoice) {
 		this.enableVoice = enableVoice;
+		db.save();
 	}
+	
+	
+	public void updateCorrectionFactor(int cf) {
+		this.correctionFactor = cf;	
+		db.save();
+	}
+	
 
 
 	public String toXML() {
@@ -255,6 +251,7 @@ public class HelioroomNotifier extends ActivePhenomena {
 		Element conf = DocumentHelper.createElement("config");
 		conf.addElement("howManyPlanetsFromTheOutside").addText(String.valueOf(howManyPlanetsFromTheOutside));
 		conf.addElement("howManySecondsInAdvance").addText(String.valueOf(howManySecondsInAdvance));
+		conf.addElement("correctionFactor").addText(String.valueOf(correctionFactor));
 		conf.addElement("enableText").addText(String.valueOf(enableText));
 		conf.addElement("enableVoice").addText(String.valueOf(enableVoice));
 		root.add(conf);

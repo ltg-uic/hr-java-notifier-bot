@@ -45,6 +45,7 @@ public class NotifierLoader {
 				"<win id=\"hr_dev_w_notifier_cp\" type=\"control\" /></windows>");
 		hn.configure("<config><howManyPlanetsFromTheOutside>9</howManyPlanetsFromTheOutside>" +
 				"<howManySecondsInAdvance>30</howManySecondsInAdvance>" +
+				"<correctionFactor>6</correctionFactor>" +
 				"<enableText>true</enableText><enableVoice>false</enableVoice></config>");
 		
 		// Load helioroom data

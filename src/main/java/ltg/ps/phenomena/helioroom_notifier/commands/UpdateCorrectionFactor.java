@@ -30,7 +30,7 @@ public class UpdateCorrectionFactor extends PhenomenaCommand {
 	 * @see ltg.ps.api.Command#execute()
 	 */
 	public void execute() {
-		((HelioroomNotifier) target).setCorrectionFactor(cf);
+		((HelioroomNotifier) target).updateCorrectionFactor(cf);
 	}
 
 	/* (non-Javadoc)
@@ -44,6 +44,7 @@ public class UpdateCorrectionFactor extends PhenomenaCommand {
 	 * @see ltg.ps.api.Command#toXML()
 	 */
 	public String toXML() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
